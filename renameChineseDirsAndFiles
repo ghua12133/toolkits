@@ -1,0 +1,41 @@
+import os
+import shutil
+import pypinyin
+
+def pinyin(word):
+    s = ''
+    for i in pypinyin.pinyin(word, style=pypinyin.NORMAL):
+        s += ''.join(i)
+    return s
+
+# 遍历文件夹
+def walkFile(file):
+    for root, dirs, files in os.walk(file):
+
+        # root 表示当前正在访问的文件夹路径
+        # dirs 表示该文件夹下的子目录名list
+        # files 表示该文件夹下的文件list
+
+        # 遍历文件
+        for f in files:
+            file_old = os.path.join(root, f)
+            file_new = pinyin(file_old)
+            print(file_old)
+            os.rename(file_old, file_new)
+        #    print(os.path.join(root, f))
+
+        # 遍历所有的文件夹
+        for d in dirs:
+            dir_old = os.path.join(root, d)
+            if dir_old == 'D:$RECYCLE.BIN' or dir_old == 'D:System Volume Information':
+                continue
+            dir_new = pinyin(dir_old)
+            print(dir_old)
+            os.rename(dir_old, dir_new)
+
+def main():
+    walkFile(r'D:\data')
+
+
+if __name__ == '__main__':
+    main()
